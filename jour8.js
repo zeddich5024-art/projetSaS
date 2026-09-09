@@ -48,21 +48,29 @@ function Afficher_trajets(list){
 }
 // Étape 3 —Acheter un ticket
 const tickets=[];
+let nextTicketId = 1;
 function Acheter_ticket(list){
     let passengerName = prompt("Nom du passager : ");
     let tripId =Number(prompt("Identifiant du trajet : "));
     for(const trip of list){
         if(trip.id === tripId && trip.availableSeats>0){
-            trip.availableSeats -=1;
+             let seatNumber = 1;
+            for (const ticket of tickets) {
+                if (ticket.tripId === trip.id && ticket.seatNumber === seatNumber) {
+                    seatNumber++;
+                }
+            }
             const ticket={
-                id :tickets.length+1,
+                id :nextTicketId,
                 passengerName : passengerName,
                 tripId : tripId,
-                seatNumber:50-trip.availableSeats,
+                seatNumber:seatNumber,
                 price:trip.price
             }
             tickets.push(ticket);
-            return trip;
+            trip.availableSeats -=1;
+            nextTicketId++;
+            return "Ticket acheté avec succès";
         }
         else if(trip.id === tripId && (trip.availableSeats === 0)) return "Tra_comp";
     }
@@ -82,7 +90,7 @@ function  Annuler_ticket(list){
         if(ticket.id === Idticket){
             for(const trip of trips){
                 if (trip.id === ticket.tripId){
-                    trip.availableSeats+=1
+                    trip.availableSeats+=1;
                 }
             }
         const index = list.indexOf(ticket);
@@ -145,7 +153,7 @@ function Railway_Manager(){
                 let trajet = Acheter_ticket(trips);
                 if(trajet === "Tr_in") console.log("Trajet introuvable");
                 else if(trajet === "Tra_comp") console.log("Train complet");
-                else  console.log("Ticket acheté avec succès");
+                else  console.log(trajet);
                 break;
             case 3:
                 let Affticket =Afficher_tickets(tickets);
@@ -154,7 +162,7 @@ function Railway_Manager(){
                 for (const ticket of tickets) {
                 console.log("Ticket #",ticket.id)
                 console.log("Passager :",ticket.passengerName);
-                console.log("Trajet :",trips[ticket.id].departure,"---->",trips[ticket.id].destination);
+                console.log("Trajet :",trips[ticket.tripId - 1].departure,"---->",trips[ticket.tripId - 1].destination);
                 console.log("Place :",ticket.seatNumber);
                 console.log("Prix :",ticket.price,"DH");
                 }}
@@ -170,7 +178,7 @@ function Railway_Manager(){
                 if(Rechticket !== null){
                 console.log("Ticket #",Rechticket.id)
                 console.log("Passager :",Rechticket.passengerName);
-                console.log("Trajet :",trips[Rechticket.id].departure,"---->",trips[Rechticket.id].destination);
+                console.log("Trajet :",trips[Rechticket.tripId - 1].departure,"---->",trips[Rechticket.tripId - 1].destination);
                 console.log("Place :",Rechticket.seatNumber);
                 console.log("Prix :",Rechticket.price,"DH");}
                 else console.log("Aucun ticket trouvé pour ce nom.");
@@ -183,6 +191,7 @@ function Railway_Manager(){
                 break;
             case 0:
                 menu =false;
+                break;
             default:
                 console.log("Option invalide. Veuillez choisir un numéro existant.");
                 break;
