@@ -26,8 +26,8 @@ function Menu_principal(){
     console.log("=================================");
     console.log("       RAILWAY MANAGER");
     console.log("=================================");
-    console.log("1.Afficher les trajets");
-    console.log("2.Acheter un ticket");
+    console.log("1. Afficher les trajets");
+    console.log("2. Acheter un ticket");
     console.log("3. Afficher les tickets");
     console.log("4. Annuler un ticket");
     console.log("5. Rechercher un ticket");
@@ -36,7 +36,7 @@ function Menu_principal(){
     console.log("0. Quitter");
 }
 // Étape 2 — Afficher les trajets
-function Afficher_trajets(trips){
+function Afficher_trajets(){
  console.log("=== TRAJETS DISPONIBLES ===")
    for(let i=0;i<trips.length;i++){
         console.log(`#${i+1}`,trips[i].departure,"----->",trips[i].destination);
@@ -47,9 +47,16 @@ function Afficher_trajets(trips){
    }
 }
 // Étape 3 —Acheter un ticket
-const tickets = [];
+const tickets = [
+    { id: 1, passengerName: "Zakaria", tripId: 1, seatNumber: 1, price: 25 },
+    { id: 2, passengerName: "Adil", tripId: 1, seatNumber: 2, price: 25 },
+    { id: 3, passengerName: "Aya", tripId: 2, seatNumber: 1, price: 90 },
+    { id: 4, passengerName: "Omar", tripId: 3, seatNumber: 1, price: 140 },
+    { id: 5, passengerName: "Yassine", tripId: 4, seatNumber: 1, price: 65 },
+    { id: 6, passengerName: "Sara", tripId: 1, seatNumber: 3, price: 25 }
+];
 let nextTicketId = 1;
-function Acheter_ticket(trips, tickets) {
+function Acheter_ticket() {
     let passengerName = prompt("Nom du passager : ");
     let tripId = Number(prompt("Identifiant du trajet : "));
     for (const trip of trips) {
@@ -87,14 +94,14 @@ function Acheter_ticket(trips, tickets) {
     return "Tr_in";
 }
 // Étape 4 — Afficher les tickets
-function Afficher_tickets(tickets){
+function Afficher_tickets(){
     if(tickets.length !== 0)
         return true;
     return false;
 }
 
 //Étape 5 — Annuler un ticket
-function  Annuler_ticket(tickets){
+function  Annuler_ticket(){
     let Idticket =Number(prompt("Entrez l'identifiant du ticket à supprimer : "));
     for (const ticket of tickets){
         if(ticket.id === Idticket){
@@ -111,7 +118,7 @@ function  Annuler_ticket(tickets){
 }
 
 // Étape 6 — Rechercher un ticket
-function Rechercher_ticket(tickets){
+function Rechercher_ticket(){
     let nompassager =prompt("Veuillez entrer le nom du passager : ");
     for(const ticket of tickets){
         if(ticket.passengerName === nompassager)
@@ -122,7 +129,7 @@ function Rechercher_ticket(tickets){
 
 
 //Étape 7 — Filtrer les trajets
-function Filtrer_trajets(trips){
+function Filtrer_trajets(){
     let villedepart=prompt("Veuillez entrer la ville de départ : ");
     for(const trip of trips){
         if((trip.departure) === villedepart) 
@@ -132,7 +139,7 @@ function Filtrer_trajets(trips){
 
 
 // Étape 8 — Trier les trajets
-function Trier_trajets(trips){
+function Trier_trajets(){
     let trips2 =[...trips];
     for(let i=0;i<trips2.length;i++){
         for(let j=0;j<trips2.length-1-i;j++){
@@ -148,23 +155,23 @@ function Trier_trajets(trips){
 
 
 function Railway_Manager(){
-    Menu_principal();
     let menu = true 
     while (menu){
-        let nombre = Number(prompt("Choisissez le numéro de l'opération à effectuer : "));
+        Menu_principal();
+        let nombre = prompt("Choisissez le numéro de l'opération à effectuer : ");
         switch(nombre){
-            case 1:
-                Afficher_trajets(trips)
+            case "1":
+                Afficher_trajets()
                  
                 break;
-            case 2:
-                let trajet = Acheter_ticket(trips,tickets);
+            case "2":
+                let trajet = Acheter_ticket();
                 if(trajet === "Tr_in") console.log("Trajet introuvable");
                 else if(trajet === "Tra_comp") console.log("Train complet");
                 else  console.log(trajet);
                 break;
-            case 3:
-                let Affticket =Afficher_tickets(tickets);
+            case "3":
+                let Affticket =Afficher_tickets();
                 if(Affticket){
                 console.log("=== TICKETS ===")
                 for (const ticket of tickets) {
@@ -176,32 +183,32 @@ function Railway_Manager(){
                 }}
                 else console.log("Aucun ticket enregistré");
                 break;
-            case 4:
-                let suppticket = Annuler_ticket(tickets);
+            case "4":
+                let suppticket = Annuler_ticket();
                 if(suppticket) console.log("Ticket annulé avec succès");
-                else console.log("Ticket introuvable.")
+                else console.log("Ticket introuvable.");
                 break;
-            case 5:
-                let Rechticket=Rechercher_ticket(tickets);
+            case "5":
+                let Rechticket=Rechercher_ticket();
                 if(Rechticket !== null){
-                console.log("Ticket #",Rechticket.id)
+                console.log("Ticket #",Rechticket.id);
                 console.log("Passager :",Rechticket.passengerName);
                 console.log("Trajet :",trips[Rechticket.tripId - 1].departure,"---->",trips[Rechticket.tripId - 1].destination);
                 console.log("Place :",Rechticket.seatNumber);
                 console.log("Prix :",Rechticket.price,"DH");}
                 else console.log("Aucun ticket trouvé pour ce nom.");
                 break;
-            case 6:
-                Filtrer_trajets(trips);
+            case "6":
+                Filtrer_trajets();
                 break;
-            case 7:
-                let trier=Trier_trajets(trips);
+            case "7":
+                let trier=Trier_trajets();
             
                 for(let trip of trier){
                     console.log(trip.departure,"---->",trip.destination,":",trip.price,"DH");
                 }
                 break;
-            case 0:
+            case "0":
                 menu =false;
                 break;
             default:
